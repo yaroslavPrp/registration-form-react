@@ -2,18 +2,12 @@ import React, { Component } from 'react';
 import style from './form.module.css';
 import Input from '../../components/Input/Input';
 import TextArea from '../../components/TextArea/TextArea';
+import INITIAL_FORM_STATE from '../../utils/initialFormState';
 
 class Form extends Component {
 	constructor() {
 		super();
-		this.nameInput = React.createRef();
-		this.surnameInput = React.createRef();
-		this.birthDateInput = React.createRef();
-		this.phoneInput = React.createRef();
-		this.websiteInput = React.createRef();
-		this.aboutTextArea = React.createRef();
-		this.technologiesTextArea = React.createRef();
-		this.lastProjectTextArea = React.createRef();
+		this.state = INITIAL_FORM_STATE;
 	}
 
 	handleCancelClick = (event) => {
@@ -22,16 +16,15 @@ class Form extends Component {
 
 	handleSaveClick = (event) => {
 		event.preventDefault();
-		
-		console.log({
-			name: this.nameInput.current.value,
-			surname: this.surnameInput.current.value,
-			birthDate: this.birthDateInput.current.value,
-			phone: this.phoneInput.current.value,
-			website: this.websiteInput.current.value,
-			about: this.aboutTextArea.current.value,
-			technologies: this.technologiesTextArea.current.value,
-			lastProject: this.lastProjectTextArea.current.value,
+		console.log(this.state);
+	}
+
+	handleChange = (event) => {
+		const targetElem = event.target.name;
+		const targetValue = event.target.value;
+
+		this.setState({
+			[targetElem]: targetValue
 		})
 	}
 
@@ -45,56 +38,56 @@ class Form extends Component {
 						type='text'
 						text='Имя'
 						name='name'
-						reference={this.nameInput}
+						handleChange={this.handleChange}
 					/>
 
 					<Input
 						type='text'
 						text='Фамилия'
 						name='surname'
-						reference={this.surnameInput}
+						handleChange={this.handleChange}
 					/>
 
 					<Input
 						type='date'
 						text='Дата Рождения'
 						name='birthDate'
-						reference={this.birthDateInput}
+						handleChange={this.handleChange}
 					/>
 
 					<Input
 						type='tel'
 						text='Телефон'
 						name='phone'
-						reference={this.phoneInput}
+						handleChange={this.handleChange}
 					/>
 
 					<Input
 						type='text'
 						text='Сайт'
 						name='website'
-						reference={this.websiteInput}
+						handleChange={this.handleChange}
 					/>
 
 					<TextArea
 						rows={7}
 						text='О себе'
 						name='about'
-						reference={this.aboutTextArea}
+						handleChange={this.handleChange}
 					/>
 
 					<TextArea
 						rows={7}
 						text='Стек технологий'
 						name='technologies'
-						reference={this.technologiesTextArea}
+						handleChange={this.handleChange}
 					/>
 
 					<TextArea
 						rows={7}
 						text='Описание последнего проекта'
 						name='lastProject'
-						reference={this.lastProjectTextArea}
+						handleChange={this.handleChange}
 					/>
 
 					<div className={style.buttonContainer}>
