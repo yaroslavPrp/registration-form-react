@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import Form from './components/Form/Form';
-import Profile from './components/Profile/Profile';
-
+import Form from './containers/Form/Form';
+import Profile from './containers/Profile/Profile';
 
 class App extends Component {
 	state = {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import style from '../Form/form.module.css';
+import style from '../../containers/Form/form.module.css';
 import InputMask from 'react-input-mask';
 
 class Input extends Component {

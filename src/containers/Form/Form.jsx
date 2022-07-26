@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import style from './form.module.css';
-import initialFormState from '../../utilities/initialFormState';
-import Input from '../Input/Input';
-import TextArea from '../TextArea/TextArea';
+import Input from '../../components/Input/Input';
+import TextArea from '../../components/TextArea/TextArea';
+import INITIAL_FORM_STATE from '../../utils/initialFormState';
 
 class Form extends Component {
 	constructor(props) {
 		super(props)
-		this.state = initialFormState;
+		this.state = INITIAL_FORM_STATE;
 	}
 
 	handleInputChange = (event) => {
@@ -80,7 +80,7 @@ class Form extends Component {
 				[targetInput]: {
 					...this.state[targetInput],
 					hasError: true,
-					errorType: 'Некорректный ввод номера телефона'
+					errorType: 'Некорректный ввод номера телефона, необходимо минимум 8 символов'
 				}
 			})
 		} else {
@@ -119,7 +119,7 @@ class Form extends Component {
 
 	handleCancelClick = (event) => {
 		event.preventDefault();
-		this.setState(initialFormState);
+		this.setState(INITIAL_FORM_STATE);
 	}
 
 	handleSaveClick = (event) => {
