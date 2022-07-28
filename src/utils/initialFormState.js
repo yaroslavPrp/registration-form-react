@@ -1,47 +1,21 @@
-const INITIAL_FORM_STATE = {
-	name: {
-		value: '',
-		hasError: false,
-		errorType: ''
-	},
-	surname: {
-		value: '',
-		hasError: false,
-		errorType: '',
-	},
-	birthDate: {
-		value: '',
-		hasError: false,
-		errorType: '',
-	},
-	phone: {
-		value: '',
-		hasError: false,
-		errorType: '',
-	},
-	website: {
-		value: '',
-		hasError: false,
-		errorType: '',
-	},
-	about: {
-		value: '',
-		hasError: false,
-		errorType: '',
-		maxLength: 600,
-	},
-	technologies: {
-		value: '',
-		hasError: false,
-		errorType: '',
-		maxLength: 600,
-	},
-	lastProject: {
-		value: '',
-		hasError: false,
-		errorType: '',
-		maxLength: 600,
-	}
+export const formDefault = {
+	name: '',
+	surname: '',
+	birthDate: '',
+	phone: '',
+	website: '',
+	about: '',
+	technologies: '',
+	lastProject: '',
 }
 
-export default INITIAL_FORM_STATE;
+export const defaultFalseValues = {
+	name: false,
+	surname: false,
+	birthDate: false,
+	phone: false,
+	website: false,
+	about: false,
+	technologies: false,
+	lastProject: false,
+}

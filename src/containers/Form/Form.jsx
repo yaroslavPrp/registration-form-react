@@ -1,247 +1,182 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import style from './form.module.css';
 import Input from '../../components/Input/Input';
 import TextArea from '../../components/TextArea/TextArea';
-import INITIAL_FORM_STATE from '../../utils/initialFormState';
+import { formDefault, defaultFalseValues } from '../../utils/initialFormState';
+import validateForm from '../../utils/validateFormValues';
 
-class Form extends Component {
-	constructor(props) {
-		super(props)
-		this.state = INITIAL_FORM_STATE;
-	}
+const Form = (props) => {
+	const [values, setValues] = useState(formDefault);
+	const [formErrors, setFormErrors] = useState(formDefault);
+	const [touched, setTouched] = useState(defaultFalseValues);
+	const [empties, setEmpties] = useState(defaultFalseValues);
 
-	handleInputChange = (event) => {
-		const targetInput = event.target.name;
-		const targetValue = event.target.value;
+	useEffect(() => {
+		setFormErrors(validateForm(values));
+	}, [values])
 
-		this.setState({
-			[targetInput]: {
-				...this.state[targetInput],
-				value: targetValue
-			}
+	const handleChange = (event) => {
+		setValues({
+			...values,
+			[event.target.name]: event.target.value
+		})
+		setEmpties({
+			...empties,
+			[event.target.name]: false
 		})
 	}
 
-
-	handleTextAreaChange = (event) => {
-		const targetTextArea = event.target.name;
-		const targetValue = event.target.value;
-
-		if (targetValue.length > this.state[targetTextArea].maxLength) {
-			this.setState({
-				[targetTextArea]: {
-					...this.state[targetTextArea],
-					value: targetValue,
-					hasError: true,
-					errorType: 'Превышен лимит символов в поле'
-				}
-			})
-		} else {
-			this.setState({
-				[targetTextArea]: {
-					...this.state[targetTextArea],
-					value: targetValue,
-					hasError: false,
-					errorType: ''
-				}
-			})
-		}
+	const handleBlur = (event) => {
+		setTouched({
+			...touched,
+			[event.target.name]: true
+		})
 	}
 
-	handleNameBlur = (event) => {
-		const targetInput = event.target.name;
-		const targetValue = event.target.value;
-
-		if (targetValue.length > 0 && targetValue.trim()[0].toUpperCase() !== targetValue.trim()[0]) {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: true,
-					errorType: 'Первый символ это всегда большая буква'
-				}
-			})
-		} else {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: false,
-					errorType: ''
-				}
-			})
-		}
-	}
-
-	handlePhoneBlur = (event) => {
-		const targetInput = event.target.name;
-		const targetValue = event.target.value;
-
-		if (targetValue.length < 11 && targetValue !== '') {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: true,
-					errorType: 'Некорректный ввод номера телефона, необходимо минимум 8 символов'
-				}
-			})
-		} else {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: false,
-					errorType: ''
-				}
-			})
-		}
-	}
-
-	handleWebsiteBlur = (event) => {
-		const targetInput = event.target.name;
-		const targetValue = event.target.value;
-
-		if (targetValue.length > 0 && !targetValue.startsWith('https://')) {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: true,
-					errorType: 'Сайт всегда должен начинаться с https://'
-				}
-			})
-		} else {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: false,
-					errorType: ''
-				}
-			})
-		}
-	}
-
-	handleCancelClick = (event) => {
+	const handleCancelClick = (event) => {
 		event.preventDefault();
-		this.setState(INITIAL_FORM_STATE);
+		setValues(formDefault);
+		setFormErrors(formDefault);
+		setTouched(defaultFalseValues);
+		setEmpties(defaultFalseValues);
 	}
 
-	handleSaveClick = (event) => {
+	const handleSaveClick = (event) => {
 		event.preventDefault();
-		const allFilled = Object.values(this.state).every(input => input.value.trim() !== '');
-		const allReady = Object.values(this.state).every(input => input.hasError === false);
+		const areAllFilled = Object.values(values).every(value => value.trim() !== '');
+		const areNoErrors = Object.values(formErrors).every(error => error.length === 0);
 
-		if (!allFilled) {
-			for (const input in this.state) {
-				if (this.state[input].value.trim() === '') {
-					this.setState({
-						[input]: {
-							...this.state[input],
-							hasError: true,
-							errorType: 'Поле пустое. Заполните пожалуйста'
-						}
-					})
+		if (!areAllFilled) {
+			const emptyOnes = Object.entries(values).reduce((prev, current) => {
+				if (current[1].trim() === '') {
+					prev[current[0]] = 'Поле пустое. Заполните пожалуйста';
 				}
-			}
+				return prev;
+			}, {})
+			setEmpties({...empties, ...emptyOnes})
 		}
 
-		if (allFilled && allReady) {
-			this.props.readyForm(this.state);
+		if (areAllFilled && areNoErrors) {
+			props.readyForm(values);
 		}
 	}
 
-	render() {
-		const { name, surname, birthDate, phone, website, about, technologies, lastProject } = this.state;
+	return (
+		<div className={style.container}>
+			<form className={style.form}>
+				<h2 className={style.title}>Создание анкеты</h2>
 
-		return (
-			<div className={style.container}>
-				<form className={style.form}>
-					<h2 className={style.title}>Создание анкеты</h2>
+				<Input
+					type='text'
+					text='Имя'
+					name='name'
+					value={values.name}
+					error={formErrors.name}
+					touched={touched.name}
+					handleChange={handleChange}
+					handleBlur={handleBlur}
+					empty={empties.name}
+				/>
 
-					<Input
-						type='text'
-						text='Имя'
-						name='name'
-						data={name}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handleNameBlur}
-					/>
+				<Input
+					type='text'
+					text='Фамилия'
+					name='surname'
+					value={values.surname}
+					error={formErrors.surname}
+					touched={touched.surname}
+					handleChange={handleChange}
+					handleBlur={handleBlur}
+					empty={empties.surname}
+				/>
 
-					<Input
-						type='text'
-						text='Фамилия'
-						name='surname'
-						data={surname}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handleNameBlur}
-					/>
+				<Input
+					type='date'
+					text='Дата Рождения'
+					name='birthDate'
+					value={values.birthDate}
+					error={formErrors.birthDate}
+					touched={touched.birthDate}
+					handleChange={handleChange}
+					handleBlur={handleBlur}
+					empty={empties.birthDate}
+				/>
 
-					<Input
-						type='date'
-						text='Дата Рождения'
-						name='birthDate'
-						data={birthDate}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handleNameBlur}
-					/>
+				<Input
+					type='tel'
+					text='Телефон'
+					name='phone'
+					value={values.phone}
+					error={formErrors.phone}
+					touched={touched.phone}
+					handleChange={handleChange}
+					handleBlur={handleBlur}
+					empty={empties.phone}
+				/>
 
-					<Input
-						type='tel'
-						text='Телефон'
-						name='phone'
-						data={phone}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handlePhoneBlur}
-					/>
+				<Input
+					type='text'
+					text='Сайт'
+					name='website'
+					value={values.website}
+					error={formErrors.website}
+					touched={touched.website}
+					handleChange={handleChange}
+					handleBlur={handleBlur}
+					empty={empties.website}
+				/>
 
-					<Input
-						type='text'
-						text='Сайт'
-						name='website'
-						data={website}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handleWebsiteBlur}
-					/>
+				<TextArea
+					rows={7}
+					text='О себе'
+					name='about'
+					value={values.about}
+					error={formErrors.about}
+					touched={touched.about}
+					handleChange={handleChange}
+					empty={empties.about}
+				/>
 
-					<TextArea
-						rows={7}
-						text='О себе'
-						name='about'
-						data={about}
-						handleTextAreaChange={this.handleTextAreaChange}
-					/>
+				<TextArea
+					rows={7}
+					text='Стек технологий'
+					name='technologies'
+					value={values.technologies}
+					error={formErrors.technologies}
+					touched={touched.technologies}
+					handleChange={handleChange}
+					empty={empties.technologies}
+				/>
 
-					<TextArea
-						rows={7}
-						text='Стек технологий'
-						name='technologies'
-						data={technologies}
-						handleTextAreaChange={this.handleTextAreaChange}
-					/>
+				<TextArea
+					rows={7}
+					text='Описание последнего проекта'
+					name='lastProject'
+					value={values.lastProject}
+					error={formErrors.lastProject}
+					touched={touched.lastProject}
+					handleChange={handleChange}
+					empty={empties.lastProject}
+				/>
 
-					<TextArea
-						rows={7}
-						text='Описание последнего проекта'
-						name='lastProject'
-						data={lastProject}
-						handleTextAreaChange={this.handleTextAreaChange}
-					/>
+				<div className={style.buttonContainer}>
+					<button
+						onClick={handleCancelClick}
+						className={`${style.button} ${style.cancel}`}>
+						Отмена
+					</button>
 
-					<div className={style.buttonContainer}>
-						<button
-							onClick={this.handleCancelClick}
-							className={`${style.button} ${style.cancel}`}>
-							Отмена
-						</button>
+					<button
+						onClick={handleSaveClick}
+						className={`${style.button} ${style.submit}`}
+						type='submit'>
+						Сохранить
+					</button>
+				</div>
 
-						<button
-							onClick={this.handleSaveClick}
-							className={`${style.button} ${style.submit}`}
-							type='submit'>
-							Сохранить
-						</button>
-					</div>
-
-				</form>
-			</div>
-		);
-	}
+			</form>
+		</div>
+	);
 }
 
 export default Form;
