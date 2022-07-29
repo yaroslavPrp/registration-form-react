@@ -28,6 +28,10 @@ class Form extends Component {
 			values: {
 				...this.state.values,
 				[targetInput]: targetValue
+			}, 
+			empties: {
+				...this.state.empties,
+				[targetInput]: false
 			}
 		})
 	}
@@ -60,13 +64,15 @@ class Form extends Component {
 		console.log(allFilled)
 
 		if (!allFilled) {
-			const empties = Object.entries(this.state.values).reduce((prev, current) => {
-				if(current[1].trim() === ''){
-					prev[current] = true
+			const emptyOnes = Object.entries(this.state.values).reduce((prev, current) => {
+				if (current[1].trim() === '') {
+					prev[current[0]] = true;
 				}
-				return prev
+				return prev;
 			}, {})
-			console.log(empties)
+			this.setState({
+				empties: {...this.state.empties, ...emptyOnes}
+			})
 		}
 
 		// if (allFilled && allReady) {
@@ -89,6 +95,7 @@ class Form extends Component {
 						value={name}
 						error={this.state.errors.name}
 						touched={this.state.touched.name}
+						empty={this.state.empties.name}
 						handleChange={this.handleChange}
 						handleBlur={this.handleBlur}
 					/>
@@ -100,6 +107,7 @@ class Form extends Component {
 						value={surname}
 						error={this.state.errors.surname}
 						touched={this.state.touched.surname}
+						empty={this.state.empties.surname}
 						handleChange={this.handleChange}
 						handleBlur={this.handleBlur}
 					/>
@@ -111,6 +119,7 @@ class Form extends Component {
 						value={birthDate}
 						error={this.state.errors.birthDate}
 						touched={this.state.touched.birthDate}
+						empty={this.state.empties.birthDate}
 						handleChange={this.handleChange}
 						handleBlur={this.handleBlur}
 					/>
@@ -122,6 +131,7 @@ class Form extends Component {
 						value={phone}
 						error={this.state.errors.phone}
 						touched={this.state.touched.phone}
+						empty={this.state.empties.phone}
 						handleChange={this.handleChange}
 						handleBlur={this.handleBlur}
 					/>
@@ -133,6 +143,7 @@ class Form extends Component {
 						value={website}
 						error={this.state.errors.website}
 						touched={this.state.touched.website}
+						empty={this.state.empties.website}
 						handleChange={this.handleChange}
 						handleBlur={this.handleBlur}
 					/>
@@ -143,7 +154,7 @@ class Form extends Component {
 						name='about'
 						value={about}
 						error={this.state.errors.about}
-						// touched={this.state.touched.about}
+						empty={this.state.empties.about}
 						handleChange={this.handleChange}
 					/>
 
@@ -153,7 +164,7 @@ class Form extends Component {
 						name='technologies'
 						value={technologies}
 						error={this.state.errors.technologies}
-						// touched={this.state.touched.technologies}
+						empty={this.state.empties.technologies}
 						handleChange={this.handleChange}
 					/>
 
@@ -163,7 +174,7 @@ class Form extends Component {
 						name='lastProject'
 						value={lastProject}
 						error={this.state.errors.lastProject}
-						// touched={this.state.touched.surname}
+						empty={this.state.empties.lastProject}
 						handleChange={this.handleChange}
 					/>
 
