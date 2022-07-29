@@ -1,46 +1,51 @@
 const INITIAL_FORM_STATE = {
 	name: {
 		value: '',
-		hasError: false,
-		errorType: ''
+		touched: false,
+		error: '',
+		empty: false
 	},
 	surname: {
 		value: '',
-		hasError: false,
-		errorType: '',
+		touched: false,
+		error: '',
+		empty: false
 	},
 	birthDate: {
 		value: '',
-		hasError: false,
-		errorType: '',
+		touched: false,
+		error: '',
+		empty: false
 	},
 	phone: {
 		value: '',
-		hasError: false,
-		errorType: '',
+		touched: false,
+		error: '',
+		empty: false
 	},
 	website: {
 		value: '',
-		hasError: false,
-		errorType: '',
+		touched: false,
+		error: '',
+		empty: false
 	},
 	about: {
 		value: '',
-		hasError: false,
-		errorType: '',
-		maxLength: 600,
+		touched: false,
+		error: '',
+		empty: false
 	},
 	technologies: {
 		value: '',
-		hasError: false,
-		errorType: '',
-		maxLength: 600,
+		touched: false,
+		error: '',
+		empty: false
 	},
 	lastProject: {
 		value: '',
-		hasError: false,
-		errorType: '',
-		maxLength: 600,
+		touched: false,
+		error: '',
+		empty: false
 	}
 }
 
