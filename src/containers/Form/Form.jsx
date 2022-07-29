@@ -2,152 +2,80 @@ import React, { Component } from 'react';
 import style from './form.module.css';
 import Input from '../../components/Input/Input';
 import TextArea from '../../components/TextArea/TextArea';
-import INITIAL_FORM_STATE from '../../utils/initialFormState';
+import { formDefault, formDefaultFalseProp } from '../../utils/initialFormState';
+import validateForm from '../../utils/validateFormValues';
 
 class Form extends Component {
 	constructor(props) {
 		super(props)
-		this.state = INITIAL_FORM_STATE;
+		this.state = {
+			values: formDefault,
+			errors: formDefault,
+			touched: formDefaultFalseProp,
+			empties: formDefaultFalseProp
+		};
 	}
 
-	handleInputChange = (event) => {
+	handleChange = (event) => {
 		const targetInput = event.target.name;
 		const targetValue = event.target.value;
 
 		this.setState({
-			[targetInput]: {
-				...this.state[targetInput],
-				value: targetValue
+			errors: validateForm({ ...this.state.values, ...{ [targetInput]: targetValue } })
+		})
+
+		this.setState({
+			values: {
+				...this.state.values,
+				[targetInput]: targetValue
+			}
+		})
+	}
+
+	handleBlur = (event) => {
+		const targetInput = event.target.name;
+
+		this.setState({
+			touched: {
+				...this.state.touched,
+				[targetInput]: true
 			}
 		})
 	}
 
 
-	handleTextAreaChange = (event) => {
-		const targetTextArea = event.target.name;
-		const targetValue = event.target.value;
-
-		if (targetValue.length > this.state[targetTextArea].maxLength) {
-			this.setState({
-				[targetTextArea]: {
-					...this.state[targetTextArea],
-					value: targetValue,
-					hasError: true,
-					errorType: 'Превышен лимит символов в поле'
-				}
-			})
-		} else {
-			this.setState({
-				[targetTextArea]: {
-					...this.state[targetTextArea],
-					value: targetValue,
-					hasError: false,
-					errorType: ''
-				}
-			})
-		}
-	}
-
-	handleNameBlur = (event) => {
-		const targetInput = event.target.name;
-		const targetValue = event.target.value;
-
-		if (targetValue.length > 0 && targetValue.trim()[0].toUpperCase() !== targetValue.trim()[0]) {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: true,
-					errorType: 'Первый символ это всегда большая буква'
-				}
-			})
-		} else {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: false,
-					errorType: ''
-				}
-			})
-		}
-	}
-
-	handlePhoneBlur = (event) => {
-		const targetInput = event.target.name;
-		const targetValue = event.target.value;
-
-		if (targetValue.length < 11 && targetValue !== '') {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: true,
-					errorType: 'Некорректный ввод номера телефона, необходимо минимум 8 символов'
-				}
-			})
-		} else {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: false,
-					errorType: ''
-				}
-			})
-		}
-	}
-
-	handleWebsiteBlur = (event) => {
-		const targetInput = event.target.name;
-		const targetValue = event.target.value;
-
-		if (targetValue.length > 0 && !targetValue.startsWith('https://')) {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: true,
-					errorType: 'Сайт всегда должен начинаться с https://'
-				}
-			})
-		} else {
-			this.setState({
-				[targetInput]: {
-					...this.state[targetInput],
-					hasError: false,
-					errorType: ''
-				}
-			})
-		}
-	}
-
 	handleCancelClick = (event) => {
 		event.preventDefault();
-		this.setState(INITIAL_FORM_STATE);
+		this.setState({
+			values: formDefault,
+			errors: formDefault,
+			touched: formDefaultFalseProp,
+			empties: formDefaultFalseProp
+		});
 	}
 
 	handleSaveClick = (event) => {
 		event.preventDefault();
-		const allFilled = Object.values(this.state).every(input => input.value.trim() !== '');
-		const allReady = Object.values(this.state).every(input => input.hasError === false);
+		const allFilled = Object.values(this.state.values).every(value => value.trim() !== '');
+		console.log(allFilled)
 
 		if (!allFilled) {
-			for (const input in this.state) {
-				if (this.state[input].value.trim() === '') {
-					this.setState({
-						[input]: {
-							...this.state[input],
-							hasError: true,
-							errorType: 'Поле пустое. Заполните пожалуйста'
-						}
-					})
+			const empties = Object.entries(this.state.values).reduce((prev, current) => {
+				if(current[1].trim() === ''){
+					prev[current] = true
 				}
-			}
+				return prev
+			}, {})
+			console.log(empties)
 		}
 
-		if (allFilled && allReady) {
-			this.props.readyForm(this.state);
-		}
+		// if (allFilled && allReady) {
+		// 	this.props.readyForm(this.state);
+		// }
 	}
 
 	render() {
-		const { name, surname, birthDate, phone, website, about, technologies, lastProject } = this.state;
+		const { name, surname, birthDate, phone, website, about, technologies, lastProject } = this.state.values;
 
 		return (
 			<div className={style.container}>
@@ -158,69 +86,85 @@ class Form extends Component {
 						type='text'
 						text='Имя'
 						name='name'
-						data={name}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handleNameBlur}
+						value={name}
+						error={this.state.errors.name}
+						touched={this.state.touched.name}
+						handleChange={this.handleChange}
+						handleBlur={this.handleBlur}
 					/>
 
 					<Input
 						type='text'
 						text='Фамилия'
 						name='surname'
-						data={surname}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handleNameBlur}
+						value={surname}
+						error={this.state.errors.surname}
+						touched={this.state.touched.surname}
+						handleChange={this.handleChange}
+						handleBlur={this.handleBlur}
 					/>
 
 					<Input
 						type='date'
 						text='Дата Рождения'
 						name='birthDate'
-						data={birthDate}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handleNameBlur}
+						value={birthDate}
+						error={this.state.errors.birthDate}
+						touched={this.state.touched.birthDate}
+						handleChange={this.handleChange}
+						handleBlur={this.handleBlur}
 					/>
 
 					<Input
 						type='tel'
 						text='Телефон'
 						name='phone'
-						data={phone}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handlePhoneBlur}
+						value={phone}
+						error={this.state.errors.phone}
+						touched={this.state.touched.phone}
+						handleChange={this.handleChange}
+						handleBlur={this.handleBlur}
 					/>
 
 					<Input
 						type='text'
 						text='Сайт'
 						name='website'
-						data={website}
-						handleInputChange={this.handleInputChange}
-						handleBlur={this.handleWebsiteBlur}
+						value={website}
+						error={this.state.errors.website}
+						touched={this.state.touched.website}
+						handleChange={this.handleChange}
+						handleBlur={this.handleBlur}
 					/>
 
 					<TextArea
 						rows={7}
 						text='О себе'
 						name='about'
-						data={about}
-						handleTextAreaChange={this.handleTextAreaChange}
+						value={about}
+						error={this.state.errors.about}
+						// touched={this.state.touched.about}
+						handleChange={this.handleChange}
 					/>
 
 					<TextArea
 						rows={7}
 						text='Стек технологий'
 						name='technologies'
-						data={technologies}
-						handleTextAreaChange={this.handleTextAreaChange}
+						value={technologies}
+						error={this.state.errors.technologies}
+						// touched={this.state.touched.technologies}
+						handleChange={this.handleChange}
 					/>
 
 					<TextArea
 						rows={7}
 						text='Описание последнего проекта'
 						name='lastProject'
-						data={lastProject}
-						handleTextAreaChange={this.handleTextAreaChange}
+						value={lastProject}
+						error={this.state.errors.lastProject}
+						// touched={this.state.touched.surname}
+						handleChange={this.handleChange}
 					/>
 
 					<div className={style.buttonContainer}>

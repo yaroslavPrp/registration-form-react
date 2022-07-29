@@ -4,7 +4,7 @@ import InputMask from 'react-input-mask';
 
 class Input extends Component {
 	onChange = (event) => {
-		this.props.handleInputChange(event);
+		this.props.handleChange(event);
 	}
 
 	onBlur = (event) => {
@@ -12,7 +12,8 @@ class Input extends Component {
 	}
 
 	render() {
-		const { type, text, name, data } = this.props;
+		const { type, text, name, value, error, touched } = this.props;
+		console.log(error)
 
 		return (
 			<label className={style.element}>{text}
@@ -24,7 +25,7 @@ class Input extends Component {
 							type={type}
 							placeholder={text}
 							name={name}
-							value={data.value}
+							value={value}
 							onChange={event => this.onChange(event)}
 							onBlur={event => this.onBlur(event)}
 							className={style.input}>
@@ -33,14 +34,14 @@ class Input extends Component {
 							type={type}
 							placeholder={text}
 							name={name}
-							value={data.value}
+							value={value}
 							onChange={event => this.onChange(event)}
-							onBlur={type !== 'birthDate' ? event => this.onBlur(event) : undefined}
+							onBlur={event => this.onBlur(event)}
 							className={style.input}
 						/>
 				}
-				{data.hasError &&
-					<div className={style.error}>{data.errorType}</div>
+				{error && touched &&
+					<div className={style.error}>{error}</div>
 				}
 			</label>
 		);
