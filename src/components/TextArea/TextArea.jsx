@@ -7,10 +7,13 @@ class TextArea extends Component {
 	}
 
 	render() {
-		const { rows, text, name, value, error } = this.props;
+		const { rows, text, name, value, error, empty } = this.props;
 
 		return (
 			<label className={style.element}>{text}
+				{empty &&
+					<div className={style.emptyError}>*Поле пустое. Заполните, пожалуйста</div>
+				}
 				<textarea
 					value={value}
 					onChange={event => this.onChange(event)}

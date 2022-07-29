@@ -61,7 +61,7 @@ class Form extends Component {
 	handleSaveClick = (event) => {
 		event.preventDefault();
 		const allFilled = Object.values(this.state.values).every(value => value.trim() !== '');
-		console.log(allFilled)
+		const noErrors = Object.values(this.state.errors).every(error => error.length === 0);
 
 		if (!allFilled) {
 			const emptyOnes = Object.entries(this.state.values).reduce((prev, current) => {
@@ -75,9 +75,9 @@ class Form extends Component {
 			})
 		}
 
-		// if (allFilled && allReady) {
-		// 	this.props.readyForm(this.state);
-		// }
+		if (allFilled && noErrors) {
+			this.props.readyForm(this.state.values);
+		}
 	}
 
 	render() {

@@ -12,11 +12,13 @@ class Input extends Component {
 	}
 
 	render() {
-		const { type, text, name, value, error, touched } = this.props;
-		console.log(error)
+		const { type, text, name, value, error, touched, empty } = this.props;
 
 		return (
 			<label className={style.element}>{text}
+				{empty &&
+					<div className={style.emptyError}>*Поле пустое. Заполните, пожалуйста</div>
+				}
 				{
 					name === 'phone' ?
 						<InputMask
