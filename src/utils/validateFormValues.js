@@ -16,7 +16,7 @@ const validateForm = (values) => {
 	}
 
 	if (values.phone.length < 12) {
-		newErrors.phone = 'Некорректный ввод номера телефона, минимум 8 символов';
+		newErrors.phone = 'Некорректный ввод номера телефона, минимум 9 символов';
 	}
 
 	if (!values.website.startsWith('https://')) {

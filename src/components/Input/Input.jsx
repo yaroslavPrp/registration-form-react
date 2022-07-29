@@ -16,7 +16,7 @@ const Input = (props) => {
 	return (
 		<label className={style.element}>{text}
 			{empty &&
-				<div className={style.emptyError}>*Поле пустое. Заполните пожалуйста</div>
+				<div className={style.emptyError}>*Поле пустое. Заполните, пожалуйста</div>
 			}
 			{
 				name === 'phone' ?

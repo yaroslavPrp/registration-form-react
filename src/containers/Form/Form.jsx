@@ -43,20 +43,20 @@ const Form = (props) => {
 
 	const handleSaveClick = (event) => {
 		event.preventDefault();
-		const areAllFilled = Object.values(values).every(value => value.trim() !== '');
-		const areNoErrors = Object.values(formErrors).every(error => error.length === 0);
+		const allFilled = Object.values(values).every(value => value.trim() !== '');
+		const noErrors = Object.values(formErrors).every(error => error.length === 0);
 
-		if (!areAllFilled) {
+		if (!allFilled) {
 			const emptyOnes = Object.entries(values).reduce((prev, current) => {
 				if (current[1].trim() === '') {
-					prev[current[0]] = 'Поле пустое. Заполните пожалуйста';
+					prev[current[0]] = true;
 				}
 				return prev;
 			}, {})
-			setEmpties({...empties, ...emptyOnes})
+			setEmpties({ ...empties, ...emptyOnes })
 		}
 
-		if (areAllFilled && areNoErrors) {
+		if (allFilled && noErrors) {
 			props.readyForm(values);
 		}
 	}
