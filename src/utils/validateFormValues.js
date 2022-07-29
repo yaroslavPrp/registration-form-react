@@ -15,8 +15,8 @@ const validateForm = (values) => {
 		newErrors.birthDate = 'Некорректный ввод';
 	}
 
-	if (values.phone.length < 11) {
-		newErrors.phone = 'Некорректный ввод номера телефона, минимум 8 символов';
+	if (values.phone.length < 12) {
+		newErrors.phone = 'Некорректный ввод номера телефона, минимум 9 символов';
 	}
 
 	if (!values.website.startsWith('https://')) {

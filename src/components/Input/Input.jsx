@@ -22,7 +22,7 @@ class Input extends Component {
 				{
 					name === 'phone' ?
 						<InputMask
-							mask="9-999-99-99"
+							mask="9-9999-99-99"
 							maskChar=""
 							type={type}
 							placeholder={text}
