@@ -1,4 +1,4 @@
-const INITIAL_FORM_STATE = {
+export const formDefault = {
   name: "",
   surname: "",
   birthDate: "",
@@ -9,4 +9,13 @@ const INITIAL_FORM_STATE = {
   lastProject: "",
 };
 
-export default INITIAL_FORM_STATE;
+export const formDefaultFalseProp = {
+  name: false,
+  surname: false,
+  birthDate: false,
+  phone: false,
+  website: false,
+  about: false,
+  technologies: false,
+  lastProject: false,
+};

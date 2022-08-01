@@ -72,6 +72,17 @@ body {
   bottom: -3px;
 }
 
+.emptyError {
+  position: absolute;
+  color: red;
+  font-size: 12px;
+  right: 0;
+  top: 11px;
+  border: 2px solid red;
+  border-radius: 5px;
+  padding: 2px;
+}
+
 .input {
   padding: 10px 10px;
   border: transparent;
