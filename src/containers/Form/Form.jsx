@@ -1,121 +1,115 @@
-import React, { Component } from 'react';
-import style from './form.module.css';
-import Input from '../../components/Input/Input';
-import TextArea from '../../components/TextArea/TextArea';
+import React, { Component } from "react";
+import style from "./form.module.css";
+import Input from "../../components/Input/Input";
+import TextArea from "../../components/TextArea/TextArea";
+import INITIAL_FORM_STATE from "../../utils/initialFormState";
 
 class Form extends Component {
-	constructor() {
-		super();
-		this.nameInput = React.createRef();
-		this.surnameInput = React.createRef();
-		this.birthDateInput = React.createRef();
-		this.phoneInput = React.createRef();
-		this.websiteInput = React.createRef();
-		this.aboutTextArea = React.createRef();
-		this.technologiesTextArea = React.createRef();
-		this.lastProjectTextArea = React.createRef();
-	}
+  constructor() {
+    super();
+    this.state = INITIAL_FORM_STATE;
+  }
 
-	handleCancelClick = (event) => {
-		event.preventDefault();
-	}
+  handleCancelClick = (event) => {
+    event.preventDefault();
+  };
 
-	handleSaveClick = (event) => {
-		event.preventDefault();
-		
-		console.log({
-			name: this.nameInput.current.value,
-			surname: this.surnameInput.current.value,
-			birthDate: this.birthDateInput.current.value,
-			phone: this.phoneInput.current.value,
-			website: this.websiteInput.current.value,
-			about: this.aboutTextArea.current.value,
-			technologies: this.technologiesTextArea.current.value,
-			lastProject: this.lastProjectTextArea.current.value,
-		})
-	}
+  handleSaveClick = (event) => {
+    event.preventDefault();
+    console.log(this.state);
+  };
 
-	render() {
-		return (
-			<div className={style.container}>
-				<form className={style.form}>
-					<h2 className={style.title}>Создание анкеты</h2>
+  handleChange = (event) => {
+    const targetElem = event.target.name;
+    const targetValue = event.target.value;
 
-					<Input
-						type='text'
-						text='Имя'
-						name='name'
-						reference={this.nameInput}
-					/>
+    this.setState({
+      [targetElem]: targetValue,
+    });
+  };
 
-					<Input
-						type='text'
-						text='Фамилия'
-						name='surname'
-						reference={this.surnameInput}
-					/>
+  render() {
+    return (
+      <div className={style.container}>
+        <form className={style.form}>
+          <h2 className={style.title}>Создание анкеты</h2>
 
-					<Input
-						type='date'
-						text='Дата Рождения'
-						name='birthDate'
-						reference={this.birthDateInput}
-					/>
+          <Input
+            type="text"
+            text="Имя"
+            name="name"
+            handleChange={this.handleChange}
+          />
 
-					<Input
-						type='tel'
-						text='Телефон'
-						name='phone'
-						reference={this.phoneInput}
-					/>
+          <Input
+            type="text"
+            text="Фамилия"
+            name="surname"
+            handleChange={this.handleChange}
+          />
 
-					<Input
-						type='text'
-						text='Сайт'
-						name='website'
-						reference={this.websiteInput}
-					/>
+          <Input
+            type="date"
+            text="Дата Рождения"
+            name="birthDate"
+            handleChange={this.handleChange}
+          />
 
-					<TextArea
-						rows={7}
-						text='О себе'
-						name='about'
-						reference={this.aboutTextArea}
-					/>
+          <Input
+            type="tel"
+            text="Телефон"
+            name="phone"
+            handleChange={this.handleChange}
+          />
 
-					<TextArea
-						rows={7}
-						text='Стек технологий'
-						name='technologies'
-						reference={this.technologiesTextArea}
-					/>
+          <Input
+            type="text"
+            text="Сайт"
+            name="website"
+            handleChange={this.handleChange}
+          />
 
-					<TextArea
-						rows={7}
-						text='Описание последнего проекта'
-						name='lastProject'
-						reference={this.lastProjectTextArea}
-					/>
+          <TextArea
+            rows={7}
+            text="О себе"
+            name="about"
+            handleChange={this.handleChange}
+          />
 
-					<div className={style.buttonContainer}>
-						<button
-							onClick={this.handleCancelClick}
-							className={`${style.button} ${style.cancel}`}>
-							Отмена
-						</button>
+          <TextArea
+            rows={7}
+            text="Стек технологий"
+            name="technologies"
+            handleChange={this.handleChange}
+          />
 
-						<button
-							onClick={this.handleSaveClick}
-							className={`${style.button} ${style.submit}`}
-							type='submit'>
-							Сохранить
-						</button>
-					</div>
+          <TextArea
+            rows={7}
+            text="Описание последнего проекта"
+            name="lastProject"
+            handleChange={this.handleChange}
+          />
 
-				</form>
-			</div>
-		);
-	}
+          <div className={style.buttonContainer}>
+            <button
+              onClick={this.handleCancelClick}
+              className={`${style.button} ${style.cancel}`}
+            >
+              Отмена
+            </button>
+
+            <button
+              onClick={this.handleSaveClick}
+              className={`${style.button} ${style.submit}`}
+              type="submit"
+            >
+              Сохранить
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
 }
 
 export default Form;
