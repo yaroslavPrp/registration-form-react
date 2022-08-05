@@ -1,5 +1,5 @@
 import React from "react";
-import style from "../../containers/Form/form.module.css";
+import style from "./input.module.css";
 import InputMask from "react-input-mask";
 
 const Input = (props) => {

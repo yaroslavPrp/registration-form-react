@@ -1,5 +1,5 @@
 import React from "react";
-import style from "../../containers/Form/form.module.css";
+import style from "./textArea.module.css";
 
 const TextArea = (props) => {
   const onChange = (event) => {
